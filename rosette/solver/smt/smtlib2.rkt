@@ -87,6 +87,12 @@
   < <= 
   is_int to_int to_real )
 
+; Finite Field theory
+(define (FiniteField prime) `(_ FiniteField ,prime))
+(define (felt val prime)
+  (format-symbol "#f~am~a" (modulo val prime) prime))
+(define-ops ff.neg ff.mul ff.add)
+
 ; Quantifiers
 (define (quantified quantifier vars body)
   `(,quantifier ,vars ,body))

@@ -16,7 +16,11 @@
                   @bvnot @bvor @bvand @bvxor @bvshl @bvlshr @bvashr
                   @bvneg @bvadd @bvmul @bvudiv @bvsdiv @bvurem @bvsrem @bvsmod
                   @concat @extract @zero-extend @sign-extend 
-                  @integer->bitvector @bitvector->integer @bitvector->natural))
+                  @integer->bitvector @bitvector->integer @bitvector->natural)
+         (only-in "../../base/core/felt.rkt"
+                  finfield? felt finfield-prime
+                  @ffeq @ff.add @ff.mul @ff.neg))
+
 
 (provide enc)
 
@@ -80,6 +84,7 @@
     [(? integer?) (enc-integer v)]
     [(? real?) (enc-real v)]
     [(bv lit t) ($bv lit (bitvector-size t))]
+    [(felt lit t) ($felt lit (finfield-prime t))]
     [_ (error 'enc "expected a boolean?, integer?, real?, or bitvector?, given ~a" v)]))
 
 (define-syntax-rule (enc-real v)
@@ -104,6 +109,8 @@
   [@+ $+] [@* $*] [@- $-] [@/ $/]  
   [@quotient $quotient] [@remainder $remainder] [@modulo $modulo]
   [@integer->real $to_real] [@real->integer $to_int] [@int? $is_int]
+  ; felt
+  [@ffeq $=] [@ff.add $ff.add] [@ff.neg $ff.neg] [@ff.mul $ff.mul]
   ; bitvector
   [@bveq $=] [@bvslt $bvslt] [@bvsle $bvsle] [@bvult $bvult] [@bvule $bvule] 
   [@bvnot $bvnot] [@bvor $bvor] [@bvand $bvand] [@bvxor $bvxor] 

@@ -1,12 +1,13 @@
 #lang racket
 
 (require racket/syntax 
-         (only-in "smtlib2.rkt" Int Real Bool BitVec
+         (only-in "smtlib2.rkt" Int Real Bool BitVec FiniteField
                   declare-const declare-fun define-const define-fun assert
                   [< smt/<] [<= smt/<=]) 
          "../../base/core/term.rkt" 
          (only-in "../../base/core/bool.rkt" @boolean?)
          (only-in "../../base/core/bitvector.rkt" bitvector? bitvector-size)
+         (only-in "../../base/core/felt.rkt" finfield? finfield-prime)
          (only-in "../../base/core/real.rkt" @integer? @real?))
 
 (provide (rename-out [make-hash env]) ref-const! ref-expr! clear! smt-type)
@@ -19,6 +20,7 @@
     [(== @integer?) Int]
     [(== @real?) Real]
     [(? bitvector? t) (BitVec (bitvector-size t))]
+    [(? finfield? t) (FiniteField (finfield-prime t))]
     [_ (error 'smt-type "expected primitive-solvable? type, given ~a" t)]))
 
 ; Clears the given environment of bindings for all Rosette
