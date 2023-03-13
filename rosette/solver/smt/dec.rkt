@@ -14,7 +14,9 @@
                   @bvslt @bvsle @bvult @bvule   
                   @bvnot @bvor @bvand @bvxor @bvshl @bvlshr @bvashr
                   @bvneg @bvadd @bvmul @bvudiv @bvsdiv @bvurem @bvsrem @bvsmod
-                  @concat @extract))
+                  @concat @extract)
+         (only-in "../../base/core/felt.rkt"
+                  finfield felt @ff.add @ff.mul @ff.neg))
 
 
 (provide decode-model)
@@ -126,6 +128,7 @@
              [(regexp #px"(\\d*\\.?\\d+)\\?" (list _ (app string->number r))) r]
              [(regexp #px"#b(\\d+)" (list str (app string-length len))) (bv (string->number str) (bitvector len))]
              [(regexp #px"#x(.+)" (list str (app string-length len))) (bv (string->number str) (bitvector (* 4 len)))]
+             [(regexp #px"#f(\\d+)m(\\d+)" (list _ val prime)) (felt (string->number val) (finfield (string->number prime)))]
              [_ expr])])]
        [(list (== '_) (app symbol->string (regexp #px"bv(\\d+)" (list _ (app string->number n)))) len)
         (bv n (bitvector len))]
@@ -164,4 +167,5 @@
         'bvneg @bvneg 'bvadd @bvadd 'bvmul @bvmul
         'bvudiv @bvudiv 'bvsdiv @bvsdiv
         'bvurem @bvurem 'bvsrem @bvsrem
-        'bvsmod @bvsmod 'concat @concat))   
+        'bvsmod @bvsmod 'concat @concat
+        'ff.add @ff.add 'ff.neg @ff.neg 'ff.mul @ff.mul))
