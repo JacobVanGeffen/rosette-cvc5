@@ -1,6 +1,6 @@
 #lang racket
 
-(require racket/stxparam racket/stxparam-exptime
+(require racket/stxparam racket/stxparam-exptime math/number-theory
          (for-syntax racket/syntax syntax/transformer))
 (require "term.rkt" "union.rkt" "bool.rkt" "polymorphic.rkt"
          "merge.rkt" "safe.rkt" "lift.rkt" "forall.rkt")
@@ -11,7 +11,7 @@
  (rename-out [@felt felt]) @felt? felt? felt-value felt-type
  (rename-out [@finfield finfield]) finfield-prime finfield?)
 
-;; ----------------- Bitvector Types ----------------- ;;
+;; ----------------- Finite Field Types ----------------- ;;
 
 ; Cache of all finfield types constructed so far, mapping sizes to types.
 (define finfield-types (make-hasheq))
@@ -19,8 +19,8 @@
 ; Returns the finfield type of the given size.
 ;; TODO change "prime" to "size"
 (define (finfield-type prime)
-  (assert (exact-positive-integer? prime)
-          (argument-error 'finfield "exact-positive-integer?" prime))
+  (assert (and (exact-positive-integer? prime) (prime? prime))
+          (argument-error 'finfield "(and/c exact-positive-integer? prime?)" prime))
   (hash-ref! finfield-types prime (λ () (finfield prime))))
 
 ; Represents a finfield type.
